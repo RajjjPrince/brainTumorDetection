@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Brain Tumor Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('static/background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        input[type="file"] {
+            margin: 15px 0;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        #preview {
+            margin-top: 20px;
+            max-width: 300px;
+            max-height: 300px;
+            display: none;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+
+        #loading {
+            display: none;
+            margin-top: 10px;
+            font-style: italic;
+            color: #555;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Brain Tumor Detection</h1>
+
+   <form id="uploadForm" action="/predict" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" id="imageInput" accept="image/*" required><br>
+        <input type="submit" value="Predict">
+        <p id="loading">Loading prediction...</p>
+        <p id="result">Prediction: </p>
+    </form>
+
+    <img id="preview" src="#" alt="Image Preview" />
+
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const preview = document.getElementById('preview');
+        const form = document.getElementById('uploadForm');
+        const loading = document.getElementById('loading');
+        const result = document.getElementById('result');
+
+        imageInput.onchange = event => {
+            const file = event.target.files[0];
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                preview.style.display = 'block';
+            }
+        };
+
+        form.onsubmit = async function (e) {
+            e.preventDefault();
+            loading.style.display = 'block';
+            result.innerText = 'Prediction: ';
+
+            const formData = new FormData(form);
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                // Properly handle prediction array
+                if (Array.isArray(data.prediction)) {
+                    result.innerText = "Prediction: " + data.prediction.join(', ');
+                } else {
+                    result.innerText = "Prediction: " + data.prediction;
+                }
+            } catch (error) {
+                result.innerText = "Error occurred. Please try again.";
+                console.error('Prediction error:', error);
+            } finally {
+                loading.style.display = 'none';
+            }
+        };
+    </script>
+
+</body>
+</html>

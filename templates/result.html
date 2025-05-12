@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction Result</title>
+     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('static\background.jpg'); /* <-- Path to your image */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+        }
+
+        form {
+            background-color: rgba(255, 255, 255, 0.9); /* semi-transparent box */
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #2c3e50;
+        }
+
+        input[type="file"],
+        input[type="submit"] {
+            margin-top: 10px;
+        }
+
+        input[type="submit"] {
+            background-color: #2e86de;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #1e70bf;
+        }
+
+        h3 {
+            margin-top: 30px;
+            color: #27ae60;
+        }
+
+        img {
+            margin-top: 10px;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <h2>Prediction: {{ prediction }}</h2>
+    <img src="/{{ image_path }}" alt="Uploaded Image" width="300">
+    <br><a href="/">Try Another</a>
+</body>
+</html>
